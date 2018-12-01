@@ -1,7 +1,9 @@
 {
   "pages":[
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/community/community",
+    "pages/news/news",
+    "pages/owner/owner"
   ],
   "window":{
     "backgroundTextStyle":"light",
@@ -14,13 +16,13 @@
       "pagePath": "pages/index/index",
       "text": "首页"
     }, {
-      "pagePath": "pages/logs/logs",
+      "pagePath": "pages/community/community",
       "text": "社区"
     },{
-      "pagePath": "pages/logs/logs",
+      "pagePath": "pages/news/news",
       "text": "资讯"
     },{
-      "pagePath": "pages/logs/logs",
+      "pagePath": "pages/owner/owner",
       "text": "我的"
     }]
   },
