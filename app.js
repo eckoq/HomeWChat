@@ -4,51 +4,47 @@
  * Desc: any question Pls contact eckoqzhang@163.com
  */
 App({
+    navigateToLogin: false,
     onLaunch: function () {
         //调用API从本地缓存中获取数据
         var logs = wx.getStorageSync('logs') || []
-        logs.unshift(Date.now())
-        wx.setStorageSync('logs', logs)
+        logs.unshift(Date.now());
+        wx.setStorageSync('logs', logs);
     },
-    
-    getUserInfo:function(cb) 
-    {
-        var that = this;
-        if (this.globalData.userInfo) 
-        {
-            typeof cb == "function" && cb(this.globalData.userInfo)
-        } 
-        else
-        {
-            //调用登录接口
-            wx.login({
-                success: function(res) {
-                    if (res.code) 
-                    {
-                        wx.request({
-                            url: "https://nextecko.com/login/",
-                            data : {
-                                code: res.code
-                            },
-                            success: function(data) {
-                                console.log(data); 
-                            },
-                            fail: function(data) {
-                                console.log("requst failed");
-                            }
-                        });
-                    }
-                    else
-                    {
-                        console.log("login failed"); 
-                    }
-                }
-            });
+    goLoginPageTimeOut: function() {
+        if (this.navigateToLogin){
+          return;
         }
+        wx.removeStorageSync('token');
+        this.navigateToLogin = true;
+        setTimeout(function() {
+          wx.navigateTo({
+            url: "/pages/authorize/authorize"
+          });
+        }, 1000);
     },
-    
-    
+    onShow(e) {
+        const _this = this;
+        const token = wx.getStorageSync('token');
+        if (!token) {
+          _this.goLoginPageTimeOut();
+          return;
+        }
+        WXAPI.checkToken(token).then(function (res) {
+          if (res.code != 0) {
+            wx.removeStorageSync('token');
+            _this.goLoginPageTimeOut();
+          }
+        })
+        wx.checkSession({
+          fail() {
+            _this.goLoginPageTimeOut();
+          }
+        })
+        this.globalData.launchOption = e;
+    },
     globalData:{
-        userInfo:null
+        userInfo:null,
+        isConnected : true
     }
 })
